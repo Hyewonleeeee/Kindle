@@ -13,6 +13,9 @@ function ResultContent() {
   const [isGrayscale, setIsGrayscale] = useState(true);
   const firstFragranceRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  
+  // basePath 가져오기 (GitHub Pages용)
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
   const styleNames: Record<string, { ko: string; en: string }> = {
     // 여성
@@ -274,7 +277,7 @@ function ResultContent() {
         }}
         webkit-playsinline="true"
       >
-        <source src="/assets/forest.mp4" type="video/mp4" />
+        <source src={`${basePath}/assets/forest.mp4`} type="video/mp4" />
       </video>
       
       {/* 검은색 그라데이션 오버레이 (아주 옅게) */}
@@ -294,7 +297,7 @@ function ResultContent() {
             <>
               <div className="w-full flex justify-center items-center relative">
                 <img 
-                  src={`/${allImages[style]}`}
+                  src={`${basePath}/${allImages[style]}`}
                   alt={styleName}
                   className="w-full max-w-4xl mx-auto h-auto object-contain"
                 />
@@ -441,7 +444,7 @@ function ResultContent() {
         {/* 향수 페이지들 */}
         {fragrances.map((fragrance, idx) => {
           const imageName = fragrance.name;
-          const imagePath = `jpg/${imageName}.jpg`;
+          const imagePath = `${basePath}/jpg/${imageName}.jpg`;
           const isLast = idx === fragrances.length - 1;
           
           return (
