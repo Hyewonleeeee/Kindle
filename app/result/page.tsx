@@ -295,12 +295,18 @@ function ResultContent() {
           {isImageStyle && style && allImages[style] ? (
             /* 이미지 스타일 (남성 논테토 + 남성 테토 + 여성 에겐): 틀 없이 이미지만 크게 표시 */
             <>
-              <div className="w-full flex justify-center items-center relative">
-                <div className="relative w-full max-w-4xl mx-auto">
+              <div className="w-full flex justify-center items-center relative px-4">
+                <div className="relative inline-block" style={{ maxWidth: 'min(100%, 56rem)' }}>
                   <img 
                     src={`${basePath}/${allImages[style]}`}
                     alt={styleName}
-                    className="w-full h-auto object-contain"
+                    className="block"
+                    style={{ 
+                      maxWidth: '100%',
+                      width: '100%',
+                      height: 'auto',
+                      display: 'block'
+                    }}
                   />
                   
                   {/* 홈으로 돌아가기 버튼과 스크롤 아이콘 - 이미지 기준 절대 위치 (PC와 동일한 비율 유지) */}
