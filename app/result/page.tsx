@@ -563,21 +563,27 @@ export default function ResultPage() {
       top: 71% !important;
     }
     
-    /* 홈으로 돌아가기 버튼 크기 조정 */
+    /* 홈으로 돌아가기 버튼 크기 조정 - 더 작게 */
     main div.relative > div.absolute.flex.flex-col.items-center a {
-      padding: 0.5rem 1rem !important;
-      font-size: 0.75rem !important;
+      padding: 0.375rem 0.75rem !important;
+      font-size: 0.65rem !important;
+      border-width: 1px !important;
     }
     
-    /* 손가락 아이콘과 화살표 아이콘 크기 조정 */
+    /* 손가락 아이콘과 화살표 아이콘 크기 조정 - 더 작게 */
     main div.relative > div.absolute.flex.flex-col.items-center svg {
-      width: 1rem !important;
-      height: 1rem !important;
+      width: 0.75rem !important;
+      height: 0.75rem !important;
     }
     
-    /* 스크롤 아이콘 컨테이너 gap 조정 */
+    /* 스크롤 아이콘 컨테이너 gap 조정 - 더 작게 */
     main div.relative > div.absolute.flex.flex-col.items-center > div:last-child {
-      gap: 0.25rem !important;
+      gap: 0.125rem !important;
+    }
+    
+    /* 버튼과 아이콘 컨테이너 전체 gap 조정 - 더 작게 */
+    main div.relative > div.absolute.flex.flex-col.items-center {
+      gap: 0.5rem !important;
     }
   }
 `}</style>
