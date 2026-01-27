@@ -155,6 +155,72 @@ function ResultContent() {
   
   const aestheticDescription = aestheticDescriptions[styleNameEn] || '';
 
+  // 남성 에겐(논테토) 스타일 목록
+  const maleEgenStyles = ['cleanBoy', 'softBoy', 'darkAcademiaBoy', 'naturalBoy'];
+  
+  // 남성 테토 스타일 목록
+  const maleTetoStyles = ['rockBoy', 'gentleBoy', 'streetBoy', 'techBoy'];
+  
+  // 여성 에겐 스타일 목록
+  const femaleEgenStyles = ['balletcore', 'cleanGirl', 'darkAcademia', 'lightAcademia', 'moriGirl', 'softGirl'];
+  
+  // 여성 테토 스타일 목록
+  const femaleTetoStyles = ['acubi', 'bossBabe', 'mobWife', 'rockstar', 'vampire'];
+  
+  // 이미지 스타일 전체 (남성 논테토 + 남성 테토 + 여성 에겐 + 여성 테토)
+  const imageStyles = [...maleEgenStyles, ...maleTetoStyles, ...femaleEgenStyles, ...femaleTetoStyles];
+  const isImageStyle = style && imageStyles.includes(style);
+
+  // 남성 에겐(논테토) 스타일 이미지 매핑
+  const maleEgenImages: Record<string, string> = {
+    darkAcademiaBoy: 'png/academiaboy.png',
+    cleanBoy: 'png/cleanboy.png',
+    naturalBoy: 'png/naturalboy.png',
+    softBoy: 'png/softboy.png',
+  };
+
+  // 남성 테토 스타일 이미지 매핑
+  const maleTetoImages: Record<string, string> = {
+    rockBoy: 'png/rockboy.png',
+    gentleBoy: 'png/gentleboy.png',
+    streetBoy: 'png/streetboy.png',
+    techBoy: 'png/techboy.png',
+  };
+
+  // 여성 에겐 스타일 이미지 매핑
+  const femaleEgenImages: Record<string, string> = {
+    balletcore: 'png/ballecoregirl.png',
+    cleanGirl: 'png/cleangirl.png',
+    darkAcademia: 'png/darkacademiagirl.png',
+    lightAcademia: 'png/liteacademiagirl.png',
+    moriGirl: 'png/morigirl.png',
+    softGirl: 'png/softgirl.png',
+  };
+
+  // 여성 테토 스타일 이미지 매핑
+  const femaleTetoImages: Record<string, string> = {
+    acubi: 'png/acubi.png',
+    bossBabe: 'png/bossbaby.png',
+    mobWife: 'png/mobwife.png',
+    rockstar: 'png/rockstar.png',
+    vampire: 'png/vampire.png',
+  };
+
+  // 전체 이미지 매핑 (남성 논테토 + 남성 테토 + 여성 에겐 + 여성 테토)
+  const allImages: Record<string, string> = {
+    ...maleEgenImages,
+    ...maleTetoImages,
+    ...femaleEgenImages,
+    ...femaleTetoImages,
+  };
+
+  // 흰색 버튼/아이콘이 필요한 스타일 목록
+  const whiteButtonStyles = ['darkAcademiaBoy', 'bossBabe', 'darkAcademia', 'gentleBoy', 'mobWife', 'rockBoy', 'rockstar', 'streetBoy', 'vampire', 'techBoy'];
+  const needsWhiteButton = style && whiteButtonStyles.includes(style);
+
+  // basePath 가져오기 (GitHub Pages용)
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
   const fragrances = style ? fragranceData[style] || [] : [];
   // scroll-snap 사용으로 추가 핸들러 불필요
 
@@ -184,17 +250,96 @@ function ResultContent() {
       />
       
       <div className="h-screen overflow-y-auto snap-y snap-mandatory relative z-20">
-        {/* 첫 번째 페이지: 무드 인트로 섹션 (아이보리 카드 스타일) */}
+        {/* 첫 번째 페이지: 무드 인트로 섹션 */}
         <div className="min-h-screen flex items-center justify-center p-4 snap-start relative">
-          <div 
-            className="max-w-4xl w-full text-center relative z-10 p-8 sm:p-12 md:p-16"
-            style={{
-              backgroundColor: 'rgba(253, 252, 240, 0.95)',
-              borderRadius: '20px',
-              border: '1px solid #EBE9D6',
-              boxShadow: '0 10px 30px -10px rgba(0, 0, 0, 0.15), 0 5px 15px -5px rgba(0, 0, 0, 0.1)',
-            }}
-          >
+          {isImageStyle && style && allImages[style] ? (
+            /* 이미지 스타일 (남성 논테토 + 남성 테토 + 여성 에겐 + 여성 테토): 틀 없이 이미지만 크게 표시 */
+            <>
+              <div className="w-full flex justify-center items-center relative px-4">
+                <div 
+                  className="relative"
+                  style={{ 
+                    display: 'block',
+                    maxWidth: 'min(100%, 56rem)',
+                    width: '100%',
+                    position: 'relative',
+                    margin: '0 auto'
+                  }}
+                >
+                  <img 
+                    src={`${basePath}/${allImages[style]}`}
+                    alt={styleName}
+                    className="block w-full h-auto"
+                    style={{ 
+                      maxWidth: '100%',
+                      width: '100%',
+                      height: 'auto',
+                      display: 'block'
+                    }}
+                  />
+                  
+                  {/* 홈으로 돌아가기 버튼과 스크롤 아이콘 - 이미지 기준 절대 위치 (PC와 동일한 비율) */}
+                  <div 
+                    className="absolute flex flex-col items-center gap-4"
+                    style={{
+                      left: style === 'cleanGirl' ? '55%' : '60%',
+                      top: style === 'vampire' ? '65%' : style === 'acubi' ? '66%' : style === 'cleanGirl' ? '73%' : '63%',
+                      transform: 'translate(-50%, -50%)',
+                      width: 'auto',
+                      height: 'auto',
+                    }}
+                  >
+                    {/* 홈으로 돌아가기 버튼 */}
+                    <div>
+                      <Link
+                        href="/"
+                        className="inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-light transition-all border"
+                        style={{
+                          color: needsWhiteButton ? '#FFFFFF' : '#2C2C2C',
+                          borderColor: needsWhiteButton ? '#FFFFFF' : '#2C2C2C',
+                          backgroundColor: 'transparent',
+                          opacity: 0.7
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.opacity = '1';
+                          if (needsWhiteButton) {
+                            e.currentTarget.style.backgroundColor = '#FFFFFF';
+                            e.currentTarget.style.color = '#2C2C2C';
+                          } else {
+                            e.currentTarget.style.backgroundColor = '#2C2C2C';
+                            e.currentTarget.style.color = '#FDFCF0';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.opacity = '0.7';
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                          e.currentTarget.style.color = needsWhiteButton ? '#FFFFFF' : '#2C2C2C';
+                        }}
+                      >
+                        {lang === 'ko' ? '홈으로 돌아가기' : 'Back to Home'}
+                      </Link>
+                    </div>
+                    
+                    {/* 스크롤 유도 아이콘 */}
+                    <div className="flex flex-col items-center gap-2 animate-bounce" style={{ color: needsWhiteButton ? '#FFFFFF' : '#2C2C2C', opacity: 0.6 }}>
+                      <Hand className="h-6 w-6" />
+                      <ChevronDown className="h-5 w-5 -mt-1" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            /* 일반 스타일: 기존 카드 스타일 */
+            <div 
+              className="max-w-4xl w-full text-center relative z-10 p-8 sm:p-12 md:p-16"
+              style={{
+                backgroundColor: 'rgba(253, 252, 240, 0.95)',
+                borderRadius: '20px',
+                border: '1px solid #EBE9D6',
+                boxShadow: '0 10px 30px -10px rgba(0, 0, 0, 0.15), 0 5px 15px -5px rgba(0, 0, 0, 0.1)',
+              }}
+            >
             {/* 상단 텍스트: "당신의 추구미는" */}
             <p 
               className="text-lg sm:text-xl mb-4 font-light"
@@ -272,6 +417,7 @@ function ResultContent() {
               </div>
             </div>
           </div>
+          )}
         </div>
 
         {/* 향수 페이지들 */}
