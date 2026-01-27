@@ -513,3 +513,49 @@ export default function ResultPage() {
   );
 }
 
+{/* 모바일 전용 스타일 - 기존 PC 코드는 수정하지 않음 */}
+<style jsx global>{`
+  @media screen and (max-width: 768px) {
+    /* 이미지 스타일일 때의 버튼과 아이콘 컨테이너 위치 조정 */
+    /* 이미지가 있는 relative 컨테이너 내부의 absolute 요소 선택 */
+    main div.relative[style*="display: block"][style*="maxWidth"] > div.absolute {
+      left: 50% !important;
+      top: 70% !important;
+      transform: translate(-50%, -50%) !important;
+    }
+    
+    /* 클린걸 스타일 전용 위치 조정 */
+    main div.relative[style*="display: block"][style*="maxWidth"] > div.absolute[style*="left: 55%"] {
+      left: 50% !important;
+      top: 75% !important;
+    }
+    
+    /* 뱀파이어 스타일 전용 위치 조정 */
+    main div.relative[style*="display: block"][style*="maxWidth"] > div.absolute[style*="top: 65%"] {
+      top: 70% !important;
+    }
+    
+    /* 아쿠비 스타일 전용 위치 조정 */
+    main div.relative[style*="display: block"][style*="maxWidth"] > div.absolute[style*="top: 66%"] {
+      top: 71% !important;
+    }
+    
+    /* 홈으로 돌아가기 버튼 크기 조정 */
+    main div.relative[style*="display: block"][style*="maxWidth"] > div.absolute a {
+      padding: 0.5rem 1rem !important;
+      font-size: 0.75rem !important;
+    }
+    
+    /* 손가락 아이콘과 화살표 아이콘 크기 조정 */
+    main div.relative[style*="display: block"][style*="maxWidth"] > div.absolute svg {
+      width: 1rem !important;
+      height: 1rem !important;
+    }
+    
+    /* 스크롤 아이콘 컨테이너 gap 조정 */
+    main div.relative[style*="display: block"][style*="maxWidth"] > div.absolute > div:last-child {
+      gap: 0.25rem !important;
+    }
+  }
+`}</style>
+
