@@ -260,9 +260,54 @@ function ResultContent() {
   }, []);
 
   return (
-    <main className="min-h-screen relative">
-      {/* 배경 비디오 */}
-      <video
+    <>
+      {/* 모바일 전용 스타일 - 기존 PC 코드는 수정하지 않음 */}
+      <style dangerouslySetInnerHTML={{__html: `
+        @media screen and (max-width: 768px) {
+          /* 이미지 스타일일 때 버튼과 아이콘 컨테이너 위치 조정 */
+          /* 이미지 다음에 오는 absolute 요소 선택 (일반 스타일의 max-w-4xl은 제외) */
+          main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute {
+            left: 50% !important;
+            top: 70% !important;
+            transform: translate(-50%, -50%) !important;
+            gap: 0.25rem !important;
+          }
+          
+          main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute[style*="left: 55%"] {
+            left: 50% !important;
+            top: 75% !important;
+          }
+          
+          main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute[style*="top: 65%"] {
+            top: 70% !important;
+          }
+          
+          main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute[style*="top: 66%"] {
+            top: 71% !important;
+          }
+          
+          /* 홈으로 돌아가기 버튼 크기 조정 */
+          main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute a {
+            padding: 0.375rem 0.75rem !important;
+            font-size: 0.65rem !important;
+            border-width: 1px !important;
+          }
+          
+          /* 손가락 아이콘과 화살표 아이콘 크기 조정 */
+          main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute svg {
+            width: 0.75rem !important;
+            height: 0.75rem !important;
+          }
+          
+          /* 스크롤 아이콘 컨테이너 gap 조정 */
+          main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute > div:last-child {
+            gap: 0.0625rem !important;
+          }
+        }
+      `}} />
+      <main className="min-h-screen relative">
+        {/* 배경 비디오 */}
+        <video
         autoPlay
         muted
         loop
@@ -520,6 +565,7 @@ function ResultContent() {
         })}
       </div>
     </main>
+    </>
   );
 }
 
@@ -534,54 +580,4 @@ export default function ResultPage() {
     </Suspense>
   );
 }
-
-{/* 모바일 전용 스타일 - 기존 PC 코드는 수정하지 않음 */}
-<style jsx global>{`
-  @media screen and (max-width: 768px) {
-    /* 이미지 스타일일 때 버튼과 아이콘 컨테이너 위치 조정 - 이미지 밖으로 나가지 않도록 */
-    /* 이미지가 있는 relative 컨테이너 내부의 absolute 요소 선택 (이미지 다음에 오는 absolute 요소) */
-    /* 일반 스타일(max-w-4xl)은 제외 */
-    main div.relative:not([class*="max-w-4xl"]) > img ~ div.absolute {
-      /* 위치를 더 안전한 곳으로 조정 (이미지 중앙 하단) */
-      left: 50% !important;
-      top: 70% !important;
-      transform: translate(-50%, -50%) !important;
-      gap: 0.25rem !important;
-    }
-    
-    /* 클린걸 스타일 전용 위치 조정 (인라인 스타일로 left: 55%가 설정된 경우) */
-    main div.relative:not([class*="max-w-4xl"]) > img ~ div.absolute[style*="left: 55%"] {
-      left: 50% !important;
-      top: 75% !important;
-    }
-    
-    /* 뱀파이어 스타일 전용 위치 조정 (인라인 스타일로 top: 65%가 설정된 경우) */
-    main div.relative:not([class*="max-w-4xl"]) > img ~ div.absolute[style*="top: 65%"] {
-      top: 70% !important;
-    }
-    
-    /* 아쿠비 스타일 전용 위치 조정 (인라인 스타일로 top: 66%가 설정된 경우) */
-    main div.relative:not([class*="max-w-4xl"]) > img ~ div.absolute[style*="top: 66%"] {
-      top: 71% !important;
-    }
-    
-    /* 홈으로 돌아가기 버튼 크기 조정 - 이미지 스타일일 때만 (모바일) */
-    main div.relative:not([class*="max-w-4xl"]) > img ~ div.absolute a {
-      padding: 0.375rem 0.75rem !important;
-      font-size: 0.65rem !important;
-      border-width: 1px !important;
-    }
-    
-    /* 손가락 아이콘과 화살표 아이콘 크기 조정 - 이미지 스타일일 때만 (모바일) */
-    main div.relative:not([class*="max-w-4xl"]) > img ~ div.absolute svg {
-      width: 0.75rem !important;
-      height: 0.75rem !important;
-    }
-    
-    /* 스크롤 아이콘 컨테이너 gap 조정 - 더 작게 */
-    main div.relative:not([class*="max-w-4xl"]) > img ~ div.absolute > div:last-child {
-      gap: 0.0625rem !important;
-    }
-  }
-`}</style>
 
