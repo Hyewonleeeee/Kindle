@@ -267,14 +267,14 @@ function ResultContent() {
           /* 이미지 스타일일 때 버튼과 아이콘 컨테이너 위치 조정 */
           /* 이미지 다음에 오는 absolute 요소 선택 (일반 스타일의 max-w-4xl은 제외) */
           main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute {
-            left: 50% !important;
+            left: 60% !important;
             top: 70% !important;
             transform: translate(-50%, -50%) !important;
-            gap: 0.25rem !important;
+            gap: 0.5rem !important;
           }
           
           main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute[style*="left: 55%"] {
-            left: 50% !important;
+            left: 65% !important;
             top: 75% !important;
           }
           
