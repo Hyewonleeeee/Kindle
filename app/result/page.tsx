@@ -3,14 +3,19 @@
 import { useSearchParams } from 'next/navigation';
 import { useLanguage } from '@/lib/i18n/LanguageProvider';
 import Link from 'next/link';
-import { Suspense, useState } from 'react';
+import { Suspense, useState, useEffect, useRef } from 'react';
 import { ChevronDown, Hand } from 'lucide-react';
 
 function ResultContent() {
   const searchParams = useSearchParams();
   const style = searchParams.get('style');
   const { lang } = useLanguage();
-  // NOTE: native scroll-snap으로 전환하여 커스텀 스크롤 상태 불필요
+  const [isGrayscale, setIsGrayscale] = useState(true);
+  const firstFragranceRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  
+  // basePath 가져오기 (GitHub Pages용)
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
   const styleNames: Record<string, { ko: string; en: string }> = {
     // 여성
@@ -218,11 +223,41 @@ function ResultContent() {
   const whiteButtonStyles = ['darkAcademiaBoy', 'bossBabe', 'darkAcademia', 'gentleBoy', 'mobWife', 'rockBoy', 'rockstar', 'streetBoy', 'vampire', 'techBoy'];
   const needsWhiteButton = style && whiteButtonStyles.includes(style);
 
-  // basePath 가져오기 (GitHub Pages용)
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-
   const fragrances = style ? fragranceData[style] || [] : [];
-  // scroll-snap 사용으로 추가 핸들러 불필요
+
+  // 스크롤 위치에 따른 흑백/컬러 전환 로직 (스크롤 컨테이너 감지)
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) {
+      // ref가 아직 설정되지 않았으면 다음 프레임에서 다시 시도
+      const timer = setTimeout(() => {
+        const container = scrollContainerRef.current;
+        if (container) {
+          const scrollTop = container.scrollTop;
+          setIsGrayscale(scrollTop < 10);
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+
+    const handleScroll = () => {
+      const scrollTop = scrollContainer.scrollTop;
+      
+      // 스크롤 위치가 10px 미만이면 흑백, 10px 이상이면 컬러
+      const shouldBeGrayscale = scrollTop < 10;
+      setIsGrayscale(shouldBeGrayscale);
+    };
+
+    // 초기 상태 확인
+    handleScroll();
+    
+    // 스크롤 컨테이너에 이벤트 리스너 추가
+    scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      scrollContainer.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
     <main className="min-h-screen relative">
@@ -234,10 +269,15 @@ function ResultContent() {
         playsInline
         preload="auto"
         className="fixed top-0 left-0 w-full h-full object-cover z-0"
-        style={{ objectFit: 'cover', pointerEvents: 'none' }}
+        style={{ 
+          objectFit: 'cover', 
+          pointerEvents: 'none',
+          filter: isGrayscale ? 'grayscale(100%)' : 'grayscale(0%)',
+          transition: 'filter 0.5s ease-in-out',
+        }}
         webkit-playsinline="true"
       >
-        <source src="/assets/forest.mp4" type="video/mp4" />
+        <source src={`${basePath}/assets/forest.mp4`} type="video/mp4" />
       </video>
       
       {/* 검은색 그라데이션 오버레이 (아주 옅게) */}
@@ -249,82 +289,63 @@ function ResultContent() {
         }}
       />
       
-      <div className="h-screen overflow-y-auto snap-y snap-mandatory relative z-20">
+      <div ref={scrollContainerRef} className="h-screen overflow-y-auto snap-y snap-mandatory relative z-20">
         {/* 첫 번째 페이지: 무드 인트로 섹션 */}
         <div className="min-h-screen flex items-center justify-center p-4 snap-start relative">
           {isImageStyle && style && allImages[style] ? (
-            /* 이미지 스타일 (남성 논테토 + 남성 테토 + 여성 에겐 + 여성 테토): 틀 없이 이미지만 크게 표시 */
+            /* 이미지 스타일 (남성 논테토 + 남성 테토 + 여성 에겐): 틀 없이 이미지만 크게 표시 */
             <>
-              <div className="w-full flex justify-center items-center relative px-4">
+              <div className="w-full flex justify-center items-center relative">
+                <img 
+                  src={`${basePath}/${allImages[style]}`}
+                  alt={styleName}
+                  className="w-full max-w-4xl mx-auto h-auto object-contain"
+                />
+                
+                {/* 홈으로 돌아가기 버튼과 스크롤 아이콘 - 절대 위치 (사진 중앙 기준 약간 오른쪽, 조금 아래) */}
                 <div 
-                  className="relative"
-                  style={{ 
-                    display: 'block',
-                    maxWidth: 'min(100%, 56rem)',
-                    width: '100%',
-                    position: 'relative',
-                    margin: '0 auto'
+                  className="absolute flex flex-col items-center gap-4"
+                  style={{
+                    left: style === 'cleanGirl' ? '55%' : '60%',
+                    top: style === 'vampire' ? '65%' : style === 'acubi' ? '66%' : style === 'cleanGirl' ? '73%' : '63%',
+                    transform: 'translate(-50%, -50%)',
                   }}
                 >
-                  <img 
-                    src={`${basePath}/${allImages[style]}`}
-                    alt={styleName}
-                    className="block w-full h-auto"
-                    style={{ 
-                      maxWidth: '100%',
-                      width: '100%',
-                      height: 'auto',
-                      display: 'block'
-                    }}
-                  />
+                  {/* 홈으로 돌아가기 버튼 */}
+                  <div>
+                    <Link
+                      href="/"
+                      className="inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-light transition-all border"
+                      style={{
+                        color: needsWhiteButton ? '#FFFFFF' : '#2C2C2C',
+                        borderColor: needsWhiteButton ? '#FFFFFF' : '#2C2C2C',
+                        backgroundColor: 'transparent',
+                        opacity: 0.7
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.opacity = '1';
+                        if (needsWhiteButton) {
+                          e.currentTarget.style.backgroundColor = '#FFFFFF';
+                          e.currentTarget.style.color = '#2C2C2C';
+                        } else {
+                          e.currentTarget.style.backgroundColor = '#2C2C2C';
+                          e.currentTarget.style.color = '#FDFCF0';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.opacity = '0.7';
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                        e.currentTarget.style.color = needsWhiteButton ? '#FFFFFF' : '#2C2C2C';
+                      }}
+                    >
+                      {lang === 'ko' ? '홈으로 돌아가기' : 'Back to Home'}
+                    </Link>
+                  </div>
                   
-                  {/* 홈으로 돌아가기 버튼과 스크롤 아이콘 - 이미지 기준 절대 위치 (PC와 동일한 비율) */}
-                  <div 
-                    className="absolute flex flex-col items-center gap-4"
-                    style={{
-                      left: style === 'cleanGirl' ? '55%' : '60%',
-                      top: style === 'vampire' ? '65%' : style === 'acubi' ? '66%' : style === 'cleanGirl' ? '73%' : '63%',
-                      transform: 'translate(-50%, -50%)',
-                      width: 'auto',
-                      height: 'auto',
-                    }}
-                  >
-                    {/* 홈으로 돌아가기 버튼 */}
-                    <div>
-                      <Link
-                        href="/"
-                        className="inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-light transition-all border"
-                        style={{
-                          color: needsWhiteButton ? '#FFFFFF' : '#2C2C2C',
-                          borderColor: needsWhiteButton ? '#FFFFFF' : '#2C2C2C',
-                          backgroundColor: 'transparent',
-                          opacity: 0.7
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.opacity = '1';
-                          if (needsWhiteButton) {
-                            e.currentTarget.style.backgroundColor = '#FFFFFF';
-                            e.currentTarget.style.color = '#2C2C2C';
-                          } else {
-                            e.currentTarget.style.backgroundColor = '#2C2C2C';
-                            e.currentTarget.style.color = '#FDFCF0';
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.opacity = '0.7';
-                          e.currentTarget.style.backgroundColor = 'transparent';
-                          e.currentTarget.style.color = needsWhiteButton ? '#FFFFFF' : '#2C2C2C';
-                        }}
-                      >
-                        {lang === 'ko' ? '홈으로 돌아가기' : 'Back to Home'}
-                      </Link>
-                    </div>
-                    
-                    {/* 스크롤 유도 아이콘 */}
-                    <div className="flex flex-col items-center gap-2 animate-bounce" style={{ color: needsWhiteButton ? '#FFFFFF' : '#2C2C2C', opacity: 0.6 }}>
-                      <Hand className="h-6 w-6" />
-                      <ChevronDown className="h-5 w-5 -mt-1" />
-                    </div>
+                  {/* 스크롤 유도 아이콘 */}
+                  <div className="flex flex-col items-center gap-2 animate-bounce" style={{ color: needsWhiteButton ? '#FFFFFF' : '#2C2C2C', opacity: 0.6 }}>
+                    <Hand className="h-6 w-6" />
+                    <ChevronDown className="h-5 w-5 -mt-1" />
                   </div>
                 </div>
               </div>
@@ -340,95 +361,96 @@ function ResultContent() {
                 boxShadow: '0 10px 30px -10px rgba(0, 0, 0, 0.15), 0 5px 15px -5px rgba(0, 0, 0, 0.1)',
               }}
             >
-            {/* 상단 텍스트: "당신의 추구미는" */}
-            <p 
-              className="text-lg sm:text-xl mb-4 font-light"
-              style={{
-                color: '#2C2C2C',
-                letterSpacing: '0.15em',
-                fontWeight: 300,
-                fontSize: '18px',
-                opacity: 0.7
-              }}
-            >
-              {lang === 'ko' ? '당신의 추구미는' : 'Your style is'}
-            </p>
-            
-            {/* Main Title: 결과 키워드 - 아주 크고 얇은 폰트 */}
-            <h1 
-              className="text-6xl sm:text-8xl md:text-9xl font-light tracking-tight mb-6"
-              style={{
-                color: '#1A1A1A',
-                fontWeight: 300,
-                letterSpacing: '-0.05em'
-              }}
-            >
-              {styleName}
-            </h1>
-            
-            {/* Sub Description: 한 줄 설명 */}
-            {aestheticDescription && (
+              {/* 상단 텍스트: "당신의 추구미는" */}
               <p 
-                className="text-lg sm:text-xl md:text-2xl font-light max-w-2xl mx-auto mb-20"
+                className="text-lg sm:text-xl mb-4 font-light"
                 style={{
-                  color: '#3A3A3A',
+                  color: '#2C2C2C',
+                  letterSpacing: '0.15em',
                   fontWeight: 300,
-                  letterSpacing: '0.01em',
-                  lineHeight: 1.6,
-                  opacity: 0.85
+                  fontSize: '18px',
+                  opacity: 0.7
                 }}
               >
-                {aestheticDescription}
+                {lang === 'ko' ? '당신의 추구미는' : 'Your style is'}
               </p>
-            )}
-            
-            {/* 홈으로 돌아가기 버튼과 스크롤 아이콘 컨테이너 */}
-            <div className="mt-16 flex flex-col items-center gap-10">
-              {/* 홈으로 돌아가기 버튼 - 작고 심플하게 */}
-              <div>
-                <Link
-                  href="/"
-                  className="inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-light transition-all border"
+              
+              {/* Main Title: 결과 키워드 - 아주 크고 얇은 폰트 */}
+              <h1 
+                className="text-6xl sm:text-8xl md:text-9xl font-light tracking-tight mb-6"
+                style={{
+                  color: '#1A1A1A',
+                  fontWeight: 300,
+                  letterSpacing: '-0.05em'
+                }}
+              >
+                {styleName}
+              </h1>
+              
+              {/* Sub Description: 한 줄 설명 */}
+              {aestheticDescription && (
+                <p 
+                  className="text-lg sm:text-xl md:text-2xl font-light max-w-2xl mx-auto mb-6"
                   style={{
-                    color: '#2C2C2C',
-                    borderColor: '#2C2C2C',
-                    backgroundColor: 'transparent',
-                    opacity: 0.7
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.opacity = '1';
-                    e.currentTarget.style.backgroundColor = '#2C2C2C';
-                    e.currentTarget.style.color = '#FDFCF0';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.opacity = '0.7';
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = '#2C2C2C';
+                    color: '#3A3A3A',
+                    fontWeight: 300,
+                    letterSpacing: '0.01em',
+                    lineHeight: 1.6,
+                    opacity: 0.85
                   }}
                 >
-                  {lang === 'ko' ? '홈으로 돌아가기' : 'Back to Home'}
-                </Link>
-              </div>
+                  {aestheticDescription}
+                </p>
+              )}
               
-              {/* 스크롤 유도 아이콘 - 손가락 + 화살표 (버튼과 충분한 간격) */}
-              <div className="flex flex-col items-center gap-2 animate-bounce" style={{ color: '#2C2C2C', opacity: 0.6 }}>
-                <Hand className="h-6 w-6" />
-                <ChevronDown className="h-5 w-5 -mt-1" />
+              {/* 홈으로 돌아가기 버튼과 스크롤 아이콘 컨테이너 */}
+              <div className="mt-16 flex flex-col items-center gap-10">
+                {/* 홈으로 돌아가기 버튼 - 작고 심플하게 */}
+                <div>
+                  <Link
+                    href="/"
+                    className="inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-light transition-all border"
+                    style={{
+                      color: '#2C2C2C',
+                      borderColor: '#2C2C2C',
+                      backgroundColor: 'transparent',
+                      opacity: 0.7
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.opacity = '1';
+                      e.currentTarget.style.backgroundColor = '#2C2C2C';
+                      e.currentTarget.style.color = '#FDFCF0';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.opacity = '0.7';
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.color = '#2C2C2C';
+                    }}
+                  >
+                    {lang === 'ko' ? '홈으로 돌아가기' : 'Back to Home'}
+                  </Link>
+                </div>
+                
+                {/* 스크롤 유도 아이콘 - 손가락 + 화살표 (버튼과 충분한 간격) */}
+                <div className="flex flex-col items-center gap-2 animate-bounce" style={{ color: '#2C2C2C', opacity: 0.6 }}>
+                  <Hand className="h-6 w-6" />
+                  <ChevronDown className="h-5 w-5 -mt-1" />
+                </div>
               </div>
             </div>
-          </div>
           )}
         </div>
 
         {/* 향수 페이지들 */}
         {fragrances.map((fragrance, idx) => {
           const imageName = fragrance.name;
-          const imagePath = `jpg/${imageName}.jpg`;
+          const imagePath = `${basePath}/jpg/${imageName}.jpg`;
           const isLast = idx === fragrances.length - 1;
           
           return (
             <div
               key={idx}
+              ref={idx === 0 ? firstFragranceRef : null}
               className={`min-h-screen flex items-center justify-center p-4 snap-start relative ${idx === 0 ? 'mt-32' : ''}`}
               style={{ marginTop: idx === 0 ? '120px' : '0' }}
             >
@@ -516,44 +538,45 @@ export default function ResultPage() {
 {/* 모바일 전용 스타일 - 기존 PC 코드는 수정하지 않음 */}
 <style jsx global>{`
   @media screen and (max-width: 768px) {
-    /* 이미지 스타일일 때의 버튼과 아이콘 컨테이너 위치 조정 */
+    /* 이미지 스타일일 때 버튼과 아이콘 컨테이너 위치 조정 - 이미지 밖으로 나가지 않도록 */
     /* 이미지가 있는 relative 컨테이너 내부의 absolute 요소 선택 */
-    main div.relative[style*="display: block"][style*="maxWidth"] > div.absolute {
+    main div.relative > div.absolute.flex.flex-col.items-center {
+      /* 위치를 더 안전한 곳으로 조정 (이미지 중앙 하단) */
       left: 50% !important;
       top: 70% !important;
       transform: translate(-50%, -50%) !important;
     }
     
-    /* 클린걸 스타일 전용 위치 조정 */
-    main div.relative[style*="display: block"][style*="maxWidth"] > div.absolute[style*="left: 55%"] {
+    /* 클린걸 스타일 전용 위치 조정 (인라인 스타일로 left: 55%가 설정된 경우) */
+    main div.relative > div.absolute.flex.flex-col.items-center[style*="left: 55%"] {
       left: 50% !important;
       top: 75% !important;
     }
     
-    /* 뱀파이어 스타일 전용 위치 조정 */
-    main div.relative[style*="display: block"][style*="maxWidth"] > div.absolute[style*="top: 65%"] {
+    /* 뱀파이어 스타일 전용 위치 조정 (인라인 스타일로 top: 65%가 설정된 경우) */
+    main div.relative > div.absolute.flex.flex-col.items-center[style*="top: 65%"] {
       top: 70% !important;
     }
     
-    /* 아쿠비 스타일 전용 위치 조정 */
-    main div.relative[style*="display: block"][style*="maxWidth"] > div.absolute[style*="top: 66%"] {
+    /* 아쿠비 스타일 전용 위치 조정 (인라인 스타일로 top: 66%가 설정된 경우) */
+    main div.relative > div.absolute.flex.flex-col.items-center[style*="top: 66%"] {
       top: 71% !important;
     }
     
     /* 홈으로 돌아가기 버튼 크기 조정 */
-    main div.relative[style*="display: block"][style*="maxWidth"] > div.absolute a {
+    main div.relative > div.absolute.flex.flex-col.items-center a {
       padding: 0.5rem 1rem !important;
       font-size: 0.75rem !important;
     }
     
     /* 손가락 아이콘과 화살표 아이콘 크기 조정 */
-    main div.relative[style*="display: block"][style*="maxWidth"] > div.absolute svg {
+    main div.relative > div.absolute.flex.flex-col.items-center svg {
       width: 1rem !important;
       height: 1rem !important;
     }
     
     /* 스크롤 아이콘 컨테이너 gap 조정 */
-    main div.relative[style*="display: block"][style*="maxWidth"] > div.absolute > div:last-child {
+    main div.relative > div.absolute.flex.flex-col.items-center > div:last-child {
       gap: 0.25rem !important;
     }
   }
