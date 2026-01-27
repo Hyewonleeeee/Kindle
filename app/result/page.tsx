@@ -270,7 +270,7 @@ function ResultContent() {
             left: 70% !important;
             top: 70% !important;
             transform: translate(-50%, -50%) !important;
-            gap: 0.75rem !important;
+            gap: 1rem !important;
           }
           
           main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute[style*="left: 55%"] {
