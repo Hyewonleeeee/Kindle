@@ -307,24 +307,24 @@ function ResultContent() {
         
         /* 아이패드 전용 스타일 - PC와 모바일은 건드리지 않음 */
         @media screen and (min-width: 769px) and (max-width: 1024px) {
-          /* 이미지 스타일일 때 버튼과 아이콘 컨테이너 위치 조정 - PC보다 왼쪽으로 조정 */
+          /* 이미지 스타일일 때 버튼과 아이콘 컨테이너 위치 조정 - 오른쪽으로 5%, 위로 2% 이동 */
           main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute {
-            left: 55% !important;
-            top: 70% !important;
+            left: 60% !important;
+            top: 68% !important;
             transform: translate(-50%, -50%) !important;
           }
           
           main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute[style*="left: 55%"] {
-            left: 50% !important;
-            top: 75% !important;
+            left: 55% !important;
+            top: 73% !important;
           }
           
           main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute[style*="top: 65%"] {
-            top: 70% !important;
+            top: 68% !important;
           }
           
           main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute[style*="top: 66%"] {
-            top: 71% !important;
+            top: 69% !important;
           }
         }
       `}} />
