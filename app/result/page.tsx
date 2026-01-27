@@ -296,21 +296,22 @@ function ResultContent() {
             /* 이미지 스타일 (남성 논테토 + 남성 테토 + 여성 에겐): 틀 없이 이미지만 크게 표시 */
             <>
               <div className="w-full flex justify-center items-center relative">
-                <img 
-                  src={`${basePath}/${allImages[style]}`}
-                  alt={styleName}
-                  className="w-full max-w-4xl mx-auto h-auto object-contain"
-                />
-                
-                {/* 홈으로 돌아가기 버튼과 스크롤 아이콘 - 절대 위치 (사진 중앙 기준 약간 오른쪽, 조금 아래) */}
-                <div 
-                  className="absolute flex flex-col items-center gap-4"
-                  style={{
-                    left: style === 'cleanGirl' ? '55%' : '60%',
-                    top: style === 'vampire' ? '65%' : style === 'acubi' ? '66%' : style === 'cleanGirl' ? '73%' : '63%',
-                    transform: 'translate(-50%, -50%)',
-                  }}
-                >
+                <div className="relative w-full max-w-4xl mx-auto">
+                  <img 
+                    src={`${basePath}/${allImages[style]}`}
+                    alt={styleName}
+                    className="w-full h-auto object-contain"
+                  />
+                  
+                  {/* 홈으로 돌아가기 버튼과 스크롤 아이콘 - 이미지 기준 절대 위치 (PC와 동일한 비율 유지) */}
+                  <div 
+                    className="absolute flex flex-col items-center gap-4"
+                    style={{
+                      left: style === 'cleanGirl' ? '55%' : '60%',
+                      top: style === 'vampire' ? '65%' : style === 'acubi' ? '66%' : style === 'cleanGirl' ? '73%' : '63%',
+                      transform: 'translate(-50%, -50%)',
+                    }}
+                  >
                   {/* 홈으로 돌아가기 버튼 */}
                   <div>
                     <Link
@@ -347,6 +348,7 @@ function ResultContent() {
                     <Hand className="h-6 w-6" />
                     <ChevronDown className="h-5 w-5 -mt-1" />
                   </div>
+                </div>
                 </div>
               </div>
             </>
