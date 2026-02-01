@@ -311,6 +311,11 @@ function ResultContent() {
           main div.relative:not([class*="max-w-4xl"]) img[src*="streetboy"] ~ div.absolute {
             top: 70% !important;
           }
+          
+          /* 보스베이브 스타일만 3% 위로 */
+          main div.relative:not([class*="max-w-4xl"]) img[src*="bossbaby"] ~ div.absolute {
+            top: 70% !important;
+          }
         }
       `}} />
       <main className="min-h-screen relative">
