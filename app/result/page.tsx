@@ -264,24 +264,13 @@ function ResultContent() {
       {/* 모바일 전용 스타일 - 기존 PC 코드는 수정하지 않음 */}
       <style dangerouslySetInnerHTML={{__html: `
         @media screen and (max-width: 768px) {
-          /* 이미지 스타일일 때 버튼과 아이콘 컨테이너 위치 조정 - 우측 하단 통일 */
+          /* 이미지 스타일일 때 버튼과 아이콘 컨테이너 위치 조정 - 사진 아래 중앙 배경에 배치 (모든 결과값 예외 없이) */
           /* 이미지 다음에 오는 absolute 요소 선택 (일반 스타일의 max-w-4xl은 제외) */
           main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute {
-            left: 69% !important;
-            top: 70% !important;
+            left: 50% !important;
+            top: 85% !important;
             transform: translate(-50%, -50%) !important;
             gap: 1rem !important;
-          }
-          
-          /* 클린걸 스타일만 이전 위치로 */
-          main div.relative:not([class*="max-w-4xl"]) img[src*="cleangirl"] ~ div.absolute {
-            left: 55% !important;
-            top: 73% !important;
-          }
-          
-          /* 스트릿보이 스타일만 3% 위로 */
-          main div.relative:not([class*="max-w-4xl"]) img[src*="streetboy"] ~ div.absolute {
-            top: 70% !important;
           }
           
           /* 홈으로 돌아가기 버튼 크기 조정 */
@@ -305,9 +294,9 @@ function ResultContent() {
         
         /* 아이패드 전용 스타일 - PC와 모바일은 건드리지 않음 */
         @media screen and (min-width: 769px) and (max-width: 1024px) {
-          /* 이미지 스타일일 때 버튼과 아이콘 컨테이너 위치 조정 - 우측 하단 통일 */
+          /* 이미지 스타일일 때 버튼과 아이콘 컨테이너 위치 조정 - 오른쪽으로 3% 더 이동 */
           main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute {
-            left: 66% !important;
+            left: 69% !important;
             top: 73% !important;
             transform: translate(-50%, -50%) !important;
           }
