@@ -267,8 +267,8 @@ function ResultContent() {
           /* 이미지 스타일일 때 버튼과 아이콘 컨테이너 위치 조정 - 우측 하단 통일 */
           /* 이미지 다음에 오는 absolute 요소 선택 (일반 스타일의 max-w-4xl은 제외) */
           main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute {
-            left: 66% !important;
-            top: 73% !important;
+            left: 68% !important;
+            top: 71% !important;
             transform: translate(-50%, -50%) !important;
             gap: 1rem !important;
           }
