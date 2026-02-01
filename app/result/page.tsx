@@ -294,9 +294,9 @@ function ResultContent() {
         
         /* 아이패드 전용 스타일 - PC와 모바일은 건드리지 않음 */
         @media screen and (min-width: 769px) and (max-width: 1024px) {
-          /* 이미지 스타일일 때 버튼과 아이콘 컨테이너 위치 조정 - 오른쪽으로 3% 더 이동 */
+          /* 이미지 스타일일 때 버튼과 아이콘 컨테이너 위치 조정 - 오른쪽으로 1% 더 이동 */
           main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute {
-            left: 69% !important;
+            left: 70% !important;
             top: 73% !important;
             transform: translate(-50%, -50%) !important;
           }
