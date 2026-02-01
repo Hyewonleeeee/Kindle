@@ -264,26 +264,24 @@ function ResultContent() {
       {/* 모바일 전용 스타일 - 기존 PC 코드는 수정하지 않음 */}
       <style dangerouslySetInnerHTML={{__html: `
         @media screen and (max-width: 768px) {
-          /* 이미지 스타일일 때 버튼과 아이콘 컨테이너 위치 조정 */
+          /* 이미지 스타일일 때 버튼과 아이콘 컨테이너 위치 조정 - 우측 하단 통일 */
           /* 이미지 다음에 오는 absolute 요소 선택 (일반 스타일의 max-w-4xl은 제외) */
           main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute {
-            left: 70% !important;
-            top: 70% !important;
+            left: 66% !important;
+            top: 73% !important;
             transform: translate(-50%, -50%) !important;
             gap: 1rem !important;
           }
           
-          main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute[style*="left: 55%"] {
-            left: 75% !important;
-            top: 75% !important;
+          /* 클린걸 스타일만 이전 위치로 */
+          main div.relative:not([class*="max-w-4xl"]) img[src*="cleangirl"] ~ div.absolute {
+            left: 55% !important;
+            top: 73% !important;
           }
           
-          main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute[style*="top: 65%"] {
+          /* 스트릿보이 스타일만 3% 위로 */
+          main div.relative:not([class*="max-w-4xl"]) img[src*="streetboy"] ~ div.absolute {
             top: 70% !important;
-          }
-          
-          main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute[style*="top: 66%"] {
-            top: 71% !important;
           }
           
           /* 홈으로 돌아가기 버튼 크기 조정 */
@@ -307,24 +305,22 @@ function ResultContent() {
         
         /* 아이패드 전용 스타일 - PC와 모바일은 건드리지 않음 */
         @media screen and (min-width: 769px) and (max-width: 1024px) {
-          /* 이미지 스타일일 때 버튼과 아이콘 컨테이너 위치 조정 - 오른쪽으로 5% 더 이동 */
+          /* 이미지 스타일일 때 버튼과 아이콘 컨테이너 위치 조정 - 우측 하단 통일 */
           main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute {
-            left: 70% !important;
-            top: 66% !important;
+            left: 66% !important;
+            top: 73% !important;
             transform: translate(-50%, -50%) !important;
           }
           
-          main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute[style*="left: 55%"] {
-            left: 65% !important;
-            top: 71% !important;
+          /* 클린걸 스타일만 이전 위치로 */
+          main div.relative:not([class*="max-w-4xl"]) img[src*="cleangirl"] ~ div.absolute {
+            left: 55% !important;
+            top: 73% !important;
           }
           
-          main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute[style*="top: 65%"] {
-            top: 66% !important;
-          }
-          
-          main div.relative:not([class*="max-w-4xl"]) img ~ div.absolute[style*="top: 66%"] {
-            top: 67% !important;
+          /* 스트릿보이 스타일만 3% 위로 */
+          main div.relative:not([class*="max-w-4xl"]) img[src*="streetboy"] ~ div.absolute {
+            top: 70% !important;
           }
         }
       `}} />
@@ -370,12 +366,12 @@ function ResultContent() {
                   className="w-full max-w-4xl mx-auto h-auto object-contain"
                 />
                 
-                {/* 홈으로 돌아가기 버튼과 스크롤 아이콘 - 절대 위치 (사진 중앙 기준 약간 오른쪽, 조금 아래) */}
+                {/* 홈으로 돌아가기 버튼과 스크롤 아이콘 - 절대 위치 (사진 우측 하단, 통일된 위치) */}
                 <div 
                   className="absolute flex flex-col items-center gap-4"
                   style={{
-                    left: style === 'cleanGirl' ? '55%' : '60%',
-                    top: style === 'vampire' ? '65%' : style === 'acubi' ? '66%' : style === 'cleanGirl' ? '73%' : '63%',
+                    left: style === 'cleanGirl' ? '55%' : '61%',
+                    top: style === 'cleanGirl' ? '73%' : style === 'streetBoy' ? '70%' : '73%',
                     transform: 'translate(-50%, -50%)',
                   }}
                 >
