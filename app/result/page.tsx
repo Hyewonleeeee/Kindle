@@ -301,10 +301,10 @@ function ResultContent() {
             transform: translate(-50%, -50%) !important;
           }
           
-          /* 클린걸 스타일만 이전 위치로 */
+          /* 클린걸 스타일만 오른쪽으로 1.5%, 아래로 3% 이동 */
           main div.relative:not([class*="max-w-4xl"]) img[src*="cleangirl"] ~ div.absolute {
-            left: 55% !important;
-            top: 73% !important;
+            left: 56.5% !important;
+            top: 76% !important;
           }
           
           /* 스트릿보이 스타일만 3% 위로 */
