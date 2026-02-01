@@ -360,7 +360,7 @@ function ResultContent() {
                   className="absolute flex flex-col items-center gap-4"
                   style={{
                     left: style === 'cleanGirl' ? '55%' : '61%',
-                    top: style === 'cleanGirl' ? '73%' : style === 'streetBoy' ? '70%' : '73%',
+                    top: style === 'cleanGirl' ? '73%' : style === 'streetBoy' ? '70%' : style === 'bossBabe' ? '70%' : '73%',
                     transform: 'translate(-50%, -50%)',
                   }}
                 >
